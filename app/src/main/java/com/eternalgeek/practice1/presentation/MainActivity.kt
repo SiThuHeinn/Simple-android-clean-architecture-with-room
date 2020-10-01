@@ -23,7 +23,9 @@ class MainActivity : AppCompatActivity() {
 
     private val adapter by lazy { FeatureOneAdapter(this::onAdapterItemClick)  }
 
-    private val repo by lazy { App.featureOneRepo }
+    private val interactor by lazy {
+        App.featureOneInteractor
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         initView()
 
         lifecycleScope.launch {
-            repo.fetchAllNodes()
+            interactor.fetchNodes()
                 .catch { error -> Log.d("MainActivity ", "error ${error.message}") }
                 .collect {
                     adapter.setNewData(it)
@@ -72,7 +74,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveNode(data : Node) {
         lifecycleScope.launch {
-            repo.saveNode(data)
+            interactor.saveNode(node = data)
         }
     }
 }
